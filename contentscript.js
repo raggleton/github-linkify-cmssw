@@ -1,3 +1,4 @@
+// console.log("Debugging github-linkify-cmssw");
 // the lines of code are stored in a table
 table = document.getElementsByClassName("js-file-line-container")[0];
 
@@ -12,7 +13,7 @@ rootURL = url.substr(0, url.search(pattern)+cmssw.length);
 
 // pattern to do #include matching
 var cpp_pattern = /#include/;
-var cpp_header_pattern = /[<\"].*[>\"]/; // does "myheader.h" or <myheader>
+var cpp_header_pattern = /[<\"].*[>\"]/; // does "myheader.h" or <myheader.h>
 
 // pattern to do python matching
 var py_pattern1 = /import/;
@@ -32,20 +33,20 @@ for (var i = 0; i < rows.length; i++) {
             var line = cell.textContent;
 
             // check line has a C++ #include, if so pull the header path
-            // TODO: check it's not a STL include, like iostream
-            if (cpp_pattern.test(line)) {
+            // ensure it has a ".h", and a "/", to exclude STL
+            if (cpp_pattern.test(line) && (/\.h/.test(line)) && (/\//.test(line))) {
                 var path = cpp_header_pattern.exec(line)[0];
                 path = path.replace(/[<>\"]/g,""); //g inmportant - global so replaces all instances
                 var link = rootURL.concat(path);
 
                 // let's replace the text with a link
                 // TODO keep same styling as before
-                for (var k = 0; k < cell.childNodes.length; k++) {
-                    if (cell.childNodes[k].textContent.indexOf(path) != -1) {
-                        var cell_html = cell.childNodes[k].innerHTML;
-                        cell.childNodes[k].innerHTML = cell_html.replace(path, "<a href=\""+link+"\">"+path+"</a>");
-                    }
-                }
+                cell.innerHTML = cell.innerHTML.replace(path, "<a href=\""+link+"\">"+path+"</a>");
+                // for (var k = 0; k < cell.childNodes.length; k++) {
+                //     if (cell.childNodes[k].textContent.indexOf(path) != -1) {
+                //         var cell_html = cell.childNodes[k].innerHTML;
+                //     }
+                // }
             }
             // test for python
             else if (py_pattern1.test(line) || py_pattern3.test(line) || py_pattern4.test(line)) {
