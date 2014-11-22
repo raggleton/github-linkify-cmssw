@@ -1,0 +1,16 @@
+{
+    "name": "Github linkify for CMSSW",
+    "description": "Turns #include statments into links when browing CMSSW on Github.",
+    "version": "0.1",
+    "content_scripts": [
+        {
+        "matches": [
+            "https://www.github.com/cms-sw/cmssw/*",
+            "https://github.com/cms-sw/cmssw/*"
+            ],
+        "js": ["contentscript.js"],
+        "run_at": "document_end"         // pay attention to this line
+        }
+    ],
+    "manifest_version":2
+}
