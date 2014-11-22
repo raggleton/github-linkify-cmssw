@@ -1,16 +1,17 @@
-#github-linkify
+#github-linkify-cmssw
 
 This Chrome extension turns `#include X` in C/C++ files (and in the future `import X`/`from X import Y` in python configs) into hyperlinks when viewing CMSSW files on Github.com, so you can get to the includes easily. (I don't know why this hasn't been done already.)
 
 ## Instructions
 
-1) First clone me:
-```
-git clone git@github.com:raggleton/github-linkify.git
-```
+1) Download the latest release:
+
+https://github.com/raggleton/github-linkify-cmssw/releases/latest
+
 2) Then install me:
-    - go to `chrome://extensions`
-    - drag and drop the `github-linkify.crx` package onto the window. This should install it. (not tested, please feedback)
+
+    - Go to [chrome://extensions](chrome://extensions)
+    - Drag and drop the `github-linkify-cmssw.crx` package onto the window. Lcick OK when it asks permission to access github.com. This should install it.
 
 ## TODO
 - [ ] Do for Python `import`/`from X import Y` statements
