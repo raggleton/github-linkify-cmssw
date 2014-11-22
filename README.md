@@ -12,9 +12,6 @@ https://github.com/raggleton/github-linkify-cmssw/releases/latest
 
 3) Drag and drop the `github-linkify-cmssw.crx` package onto the window. Click OK when it asks permission to access github.com. This should install it.
 
-## TODO
-- [ ] keep the colour of the links to their original colour
-
 Maybe I'll do a Firefox equivalent some day. If I ever get this one done.
 
 Robin Aggleton 2014

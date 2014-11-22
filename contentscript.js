@@ -39,15 +39,25 @@ for (var i = 0; i < rows.length; i++) {
                 path = path.replace(/[<>\"]/g,""); //g inmportant - global so replaces all instances
                 var link = rootURL.concat(path);
 
+                // get color of original text by getting class name of <span> or <td> tag that houses it,
+                // then ask style sheet for color attribute for that class
+                var header_class = "";
+                for (var k = 0; k < cell.childNodes.length; k++) {
+                    if (cell.childNodes[k].textContent.indexOf(path) != -1) {
+                        header_class = cell.childNodes[k].className;
+                    }
+                }
+                if (!header_class){
+                    header_class = cell.className.split(" ")[0];
+                }
+
+                var color = window.getComputedStyle(document.querySelector("."+header_class)).getPropertyValue("color");
+
                 // let's replace the text with a link
-                // TODO keep same styling as before
-                cell.innerHTML = cell.innerHTML.replace(path, "<a href=\""+link+"\">"+path+"</a>");
-                // for (var k = 0; k < cell.childNodes.length; k++) {
-                //     if (cell.childNodes[k].textContent.indexOf(path) != -1) {
-                //         var cell_html = cell.childNodes[k].innerHTML;
-                //     }
-                // }
+                // keep same colour as before, but underline it to make it noticeable for user
+                cell.innerHTML = cell.innerHTML.replace(path, "<a href=\""+link+"\" style=\"text-decoration:underline;color:"+color+"\">"+path+"</a>"); // <font color=\"#df5000\">
             }
+
             // tests for python imports/fragments
             var config = "";
             if (py_pattern1.test(line)) {
@@ -72,10 +82,23 @@ for (var i = 0; i < rows.length; i++) {
                 path = path.replace(parts[parts.length-1],"python/"+parts[parts.length-1]+".py")
                 var link = rootURL.concat(path)
 
+                // get color of original text by getting class name of <span> or <td> tag that houses it,
+                // then ask style sheet for color attribute for that class
+                // should probably put this as a function since we do the same for py and c++
+                var header_class = "";
+                for (var k = 0; k < cell.childNodes.length; k++) {
+                    if (cell.childNodes[k].textContent.indexOf(config) != -1) {
+                        header_class = cell.childNodes[k].className;
+                    }
+                }
+                if (!header_class){
+                    header_class = cell.className.split(" ")[0];
+                }
+                var color = window.getComputedStyle(document.querySelector("."+header_class)).getPropertyValue("color");
+
                 // let's replace the text with a link
-                // TODO keep same styling as before
-                var cell_html = cell.innerHTML;
-                cell.innerHTML = cell_html.replace(config, "<a href=\""+link+"\">"+config+"</a>");
+                // keep same colour as before, but underline it to make it noticeable for user
+                cell.innerHTML = cell.innerHTML.replace(config, "<a href=\""+link+"\" style=\"text-decoration:underline;color:"+color+"\">"+config+"</a>");
             }
         }
     }
