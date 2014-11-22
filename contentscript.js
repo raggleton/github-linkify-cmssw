@@ -16,9 +16,9 @@ var cpp_pattern = /#include/;
 var cpp_header_pattern = /[<\"].*[>\"]/; // does "myheader.h" or <myheader.h>
 
 // pattern to do python matching
-var py_pattern1 = /import/;
-var py_pattern2 = /from\s.*\simport\s.*/; // might not need this one
-var py_pattern3 = /import.*as.*/;
+var py_pattern1 = /from\s.*\simport\s.*/;
+var py_pattern2 = /import.*as.*/;
+var py_pattern3 = /import/;
 var py_pattern4 = /process.load(.*)/;
 
 // loop through all rows <tr>
@@ -48,9 +48,34 @@ for (var i = 0; i < rows.length; i++) {
                 //     }
                 // }
             }
-            // test for python
-            else if (py_pattern1.test(line) || py_pattern3.test(line) || py_pattern4.test(line)) {
+            // tests for python imports/fragments
+            var config = "";
+            if (py_pattern1.test(line)) {
+                config = line.replace(/from\s/,"");
+                config = config.replace(/\simport.*/,"");
+            } else if (py_pattern2.test(line)) {
+                config = line.replace(/import\s/,"");
+                config = config.replace(/\sas\s.*/,"");
+            } else if (py_pattern3.test(line)) {
+                config = line.replace(/import\s/,"");
+            } else if (py_pattern4.test(line)) {
+                config = line.replace("process.load(","");
+                config = config.replace(")","");
+            }
 
+            // if we have a valid python config, turn it into a path
+            // ensure it has a / in it so it isn't a 3rd party library
+            if (config != "" && (/\./.test(config))) {
+                config = config.replace(/['"]/g,"");
+                var path = config.replace(/\./g,"/");
+                var parts = path.split("/");
+                path = path.replace(parts[parts.length-1],"python/"+parts[parts.length-1]+".py")
+                var link = rootURL.concat(path)
+
+                // let's replace the text with a link
+                // TODO keep same styling as before
+                var cell_html = cell.innerHTML;
+                cell.innerHTML = cell_html.replace(config, "<a href=\""+link+"\">"+config+"</a>");
             }
         }
     }
