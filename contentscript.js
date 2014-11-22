@@ -3,10 +3,11 @@ table = document.getElementsByClassName("js-file-line-container")[0];
 
 // get current page URL
 url = table.baseURI;
-// make root URL, i.e. only up to CMSSW_*
-var pattern = /CMSSW_[0-9]_[0-9]_[0-9]_[A-Za-z0-9]*/;
-cmssw = pattern.exec(url)[0]; // gives us the CMSSW name
-rootURL = url.substr(0, url.search(pattern)+cmssw.length+1);
+// make root URL, i.e. up to & including CMSSW_X_Y_Z_AAA
+// note, be careful as can have CMSSW_1_2_3, CMSSW_1_2_X, CMSSW_1_2_3_SHLC_fixTk, etc
+var pattern = /CMSSW_[0-9]_[0-9]_.*?\//;
+cmssw = pattern.exec(url)[0];
+rootURL = url.substr(0, url.search(pattern)+cmssw.length);
 // console.log("URL: " + rootURL);
 
 // pattern to do #include matching
@@ -46,7 +47,10 @@ for (var i = 0; i < rows.length; i++) {
                     }
                 }
             }
-            // TODO test for python
+            // test for python
+            else if (py_pattern1.test(line) || py_pattern3.test(line) || py_pattern4.test(line)) {
+
+            }
         }
     }
 }
