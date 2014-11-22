@@ -1,3 +1,6 @@
+// the lines of code are stored in a table
+table = document.getElementsByClassName("js-file-line-container")[0];
+
 // get current page URL
 url = table.baseURI;
 // make root URL, i.e. only up to CMSSW_*
@@ -7,11 +10,14 @@ rootURL = url.substr(0, url.search(pattern)+cmssw.length+1);
 // console.log("URL: " + rootURL);
 
 // pattern to do #include matching
-cpp_pattern = /#include/;
-cpp_header_pattern = /[<\"].*[>\"]/;
+var cpp_pattern = /#include/;
+var cpp_header_pattern = /[<\"].*[>\"]/; // does "myheader.h" or <myheader>
 
-// the lines of code are stored in a table
-table = document.getElementsByClassName("js-file-line-container")[0];
+// pattern to do python matching
+var py_pattern1 = /import/;
+var py_pattern2 = /from\s.*\simport\s.*/; // might not need this one
+var py_pattern3 = /import.*as.*/;
+var py_pattern4 = /process.load(.*)/;
 
 // loop through all rows <tr>
 var rows = document.getElementsByTagName("tr");
