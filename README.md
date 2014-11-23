@@ -14,4 +14,22 @@ https://github.com/raggleton/github-linkify-cmssw/releases/latest
 
 Maybe I'll do a Firefox equivalent some day. If I ever get this one done.
 
+## Instructions for developers
+
+1) Clone this repo.
+
+2) Go to chrome://extensions
+
+3) If you installed the extension from the crx package above, remove it (hit the little bin icon next to it) or disable it.
+
+4) Enable Developer Mode by ticking the box in the top right of the page.
+
+5) Hit "Load unpacked extension..." and navigate to the folder into which you cloned.
+
+6) This should add the extension at the top of the list of extensions.
+
+7) You can now edit make edits. Everything is done in [contentscript.js](contentscript.js). The [manifest.json](manifest.json) file declares the extension to Chrome, with options about name, version number, page permissions, etc.
+
+8) Once you've made your edits, hit the Reload button below the extension (or ctrl/cmd+R on the chrome://extensions page) and reload your cmssw page to see your work in action!
+
 Robin Aggleton 2014
