@@ -1,14 +1,22 @@
 // console.log("Debugging github-linkify-cmssw");
+
 // the lines of code are stored in a table
 table = document.getElementsByClassName("js-file-line-container")[0];
 
 // get current page URL
+// better way to do this?
 url = table.baseURI;
-// make root URL, i.e. up to & including CMSSW_X_Y_Z_AAA
-// note, be careful as can have CMSSW_1_2_3, CMSSW_1_2_X, CMSSW_1_2_3_SHLC_fixTk, etc
-var pattern = /CMSSW_[0-9]_[0-9]_.*?\//;
-cmssw = pattern.exec(url)[0];
-rootURL = url.substr(0, url.search(pattern)+cmssw.length);
+
+// make root URL, i.e. up to & including CMSSW_X_Y_Z_AAA, or tag hash
+// note, be careful as can have URLs in diff formats:
+// github.com/cms-sw/cmssw/blob/CMSSW_7_2_X/DataFormats/JetReco/interface/GenJetCollection.h
+// with CMSSW_1_2_3, CMSSW_1_2_X, CMSSW_1_2_3_SHLC_fixTk, etc,
+// or
+// github.com/cms-sw/cmssw/blob/975...a78/DataFormats/JetReco/interface/GenJetCollection.h
+var cmssw_pattern = /.*\/cmssw\/blob\/[_a-zA-Z0-9]*?\//;
+var rootURL = "";
+cmssw = cmssw_pattern.exec(url)[0];
+rootURL = url.substr(0, url.search(cmssw_pattern)+cmssw.length);
 // console.log("URL: " + rootURL);
 
 // pattern to do #include matching
