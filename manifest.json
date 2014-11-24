@@ -1,12 +1,12 @@
 {
     "name": "Github linkify for CMSSW",
     "description": "Turns #include statments in C++ files, and import X/from X import Y/process.load(XXX.YYY.ZZZ_cff) in python config files, into links when browing CMSSW on Github.",
-    "version": "0.2.3",
+    "version": "0.2.4",
     "content_scripts": [
         {
         "matches": [
-            "https://www.github.com/cms-sw/cmssw/*",
-            "https://github.com/cms-sw/cmssw/*"
+            "https://www.github.com/*/cmssw/*",
+            "https://github.com/*/cmssw/*"
             ],
         "js": ["contentscript.js"],
         "run_at": "document_end"         // pay attention to this line
