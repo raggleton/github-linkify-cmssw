@@ -8,7 +8,7 @@
 // or
 // github.com/cms-sw/cmssw/blob/975...a78/DataFormats/JetReco/interface/GenJetCollection.h
 var url = document.URL;
-var cmssw_pattern = /.*\/cmssw\/blob\/[_a-zA-Z0-9]*?\//;
+var cmssw_pattern = /.*\/cmssw\/blob\/[_a-zA-Z0-9\.]*?\//;
 var rootURL = "";
 cmssw = cmssw_pattern.exec(url)[0];
 rootURL = url.substr(0, url.search(cmssw_pattern)+cmssw.length);
