@@ -78,7 +78,7 @@ for (var i = 0; i < rows.length; i++) {
 
             // if we have a valid python config, turn it into a path
             // ensure it has a / in it so it isn't a 3rd party library
-            if (config != "" && (/\./.test(config))) {
+            if (config != "" && (/\./.test(config) || /\//.test(config))) {
                 config = config.replace(/['"]/g,"");
                 var path = config.replace(/\./g,"/");
                 var parts = path.split("/");
