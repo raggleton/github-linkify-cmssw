@@ -1,3 +1,11 @@
+// Main script
+//
+// Turns #include statments into hyperlinks
+// Also turns python import/process.load() statements into links as well
+//
+// Robin Aggleton 2014
+
+
 // console.log("Debugging github-linkify-cmssw");
 
 
@@ -14,32 +22,77 @@ cmssw = cmssw_pattern.exec(url)[0];
 rootURL = url.substr(0, url.search(cmssw_pattern)+cmssw.length);
 // console.log("URL: " + rootURL);
 
-// pattern to do #include matching
-var cpp_pattern = /#include/;
-var cpp_header_pattern = /[<\"].*[>\"]/; // does "myheader.h" or <myheader.h>
+// test line to see if is a valid "#include"
+function test_cpp_include(line) {
+    // var cpp_pattern = /#include/;
+    if (/#include/.test(line)
+        && (/\.h/.test(line))
+        && (line.indexOf("/") > 5) // to eliminate STL, the > 2 is to avoid commented lines as well
+        && (line.search("boost") == -1) // ignore popular libs
+        )
+        return true;
+    else
+        return false
+}
 
-// pattern to do python matching
-var py_pattern1 = /from\s.*\simport\s.*/;
-var py_pattern2 = /import.*as.*/;
-var py_pattern3 = /import/;
-var py_pattern4 = /process.load(.*)/;
+
+// test line to see if valid python import/process.load/etc
+function test_py_import(line) {
+    // patterns to do python matching
+    var py_pattern1 = /from\s.*\simport\s.*/;
+    var py_pattern2 = /import.*as.*/;
+    var py_pattern3 = /import/;
+    var py_pattern4 = /process.load(.*)/;
+
+    var config;
+    if (py_pattern1.test(line)) {
+        config = line.replace(/from\s/,"");
+        config = config.replace(/\simport.*/,"");
+    } else if (py_pattern2.test(line)) {
+        config = line.replace(/import\s/,"");
+        config = config.replace(/\sas\s.*/,"");
+    } else if (py_pattern3.test(line)) {
+        config = line.replace(/import\s/,"");
+    } else if (py_pattern4.test(line)) {
+        config = line.replace("process.load(","");
+        config = config.replace(")","");
+    }
+    // ensure it has a / in it so it isn't a 3rd party library
+    if ((/\./.test(config) || /\//.test(config)))
+        return config;
+    else
+        return "";
+}
+
+
+// test if URL exists
+// slow??
+function UrlExists(url) {
+    var http = new XMLHttpRequest();
+    http.open('HEAD', url, false);
+    http.send();
+    return http.status != 404;
+}
+
 
 // loop through all rows <tr>
 var rows = document.getElementsByTagName("tr");
-for (var i = 0; i < rows.length; i++) {
-    for (var j = 0; j < rows[i].childNodes.length; j++) {
+for (var i = 0; i < rows.length; ++i) {
+    for (var j = 0; j < rows[i].childNodes.length; ++j) {
 
         // check it's a line of the file, not anything else
         var file_line_pattern = /js-file-line/;
         var cell = rows[i].childNodes[j];
+
         if (file_line_pattern.test(cell.className)) {
             var line = cell.textContent;
 
             // check line has a C++ #include, if so pull the header path
             // ensure it has a ".h", and a "/", to exclude STL
-            if (cpp_pattern.test(line) && (/\.h/.test(line)) && (/\//.test(line))) {
+            if (test_cpp_include(line)) {
+                var cpp_header_pattern = /[<\"].*[>\"]/; // does "myheader.h" or <myheader.h>
                 var path = cpp_header_pattern.exec(line)[0];
-                path = path.replace(/[<>\"]/g,""); //g inmportant - global so replaces all instances
+                path = path.replace(/[<>\"]/g, ""); //g inmportant - global so replaces all instances
                 var link = rootURL.concat(path);
 
                 // get color of original text by getting class name of <span> or <td> tag that houses it,
@@ -50,7 +103,7 @@ for (var i = 0; i < rows.length; i++) {
                         header_class = cell.childNodes[k].className;
                     }
                 }
-                if (!header_class){
+                if (!header_class) {
                     header_class = cell.className.split(" ")[0];
                 }
 
@@ -58,29 +111,32 @@ for (var i = 0; i < rows.length; i++) {
 
                 // let's replace the text with a link
                 // keep same colour as before, but underline it to make it noticeable for user
-                cell.innerHTML = cell.innerHTML.replace(path, "<a href=\""+link+"\" style=\"text-decoration:underline;color:"+color+"\">"+path+"</a>"); // <font color=\"#df5000\">
+                var newText = "<a href=\""+link+"\" style=\"text-decoration:underline;color:"+color+"\">"+path+"</a>";
+                cell.innerHTML = cell.innerHTML.replace(path, newText); // <font color=\"#df5000\">
+
+                // we add in a tag to go to the src file instead
+                // THIS ASSUMES THE FILE IS IN /src/ DIRECTORY
+                // but what if it is in /plugins???
+                // brutal way atm to tell if it's .cpp or .cc. Need github API here!
+                var srcPath = link.replace("interface", "src");
+                var cppSrc = srcPath.replace(".h", ".cpp");
+                var ccSrc = srcPath.replace(".h", ".cc");
+                if (UrlExists(cppSrc))
+                    srcPath = cppSrc;
+                else if (UrlExists(ccSrc))
+                    srcPath = ccSrc;
+                if (srcPath != link.replace("interface", "src")) {
+                    var srcText = "&nbsp&nbsp&nbsp<a href=\""+srcPath+"\" style=\"text-decoration:underline;\">[goto src]</a>";
+                    cell.innerHTML = cell.innerHTML.concat(srcText);
+                }
             }
 
             // tests for python imports/fragments
-            var config = "";
-            if (py_pattern1.test(line)) {
-                config = line.replace(/from\s/,"");
-                config = config.replace(/\simport.*/,"");
-            } else if (py_pattern2.test(line)) {
-                config = line.replace(/import\s/,"");
-                config = config.replace(/\sas\s.*/,"");
-            } else if (py_pattern3.test(line)) {
-                config = line.replace(/import\s/,"");
-            } else if (py_pattern4.test(line)) {
-                config = line.replace("process.load(","");
-                config = config.replace(")","");
-            }
-
+            var config = test_py_import(line);
             // if we have a valid python config, turn it into a path
-            // ensure it has a / in it so it isn't a 3rd party library
-            if (config != "" && (/\./.test(config) || /\//.test(config))) {
-                config = config.replace(/['"]/g,"");
-                var path = config.replace(/\./g,"/");
+            if (config != "") {
+                config = config.replace(/['"]/g, "");
+                var path = config.replace(/\./g, "/");
                 var parts = path.split("/");
                 path = path.replace(parts[parts.length-1],"python/"+parts[parts.length-1]+".py")
                 var link = rootURL.concat(path)
@@ -101,7 +157,8 @@ for (var i = 0; i < rows.length; i++) {
 
                 // let's replace the text with a link
                 // keep same colour as before, but underline it to make it noticeable for user
-                cell.innerHTML = cell.innerHTML.replace(config, "<a href=\""+link+"\" style=\"text-decoration:underline;color:"+color+"\">"+config+"</a>");
+                var newText = "<a href=\""+link+"\" style=\"text-decoration:underline;color:"+color+"\">"+config+"</a>";
+                cell.innerHTML = cell.innerHTML.replace(config, newText);
             }
         }
     }

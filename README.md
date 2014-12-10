@@ -1,6 +1,8 @@
 #github-linkify-cmssw
 
-This Chrome extension turns `#include X` in C/C++ files, and `import X`/`from X import Y`/`process.load(XXX.YYY.ZZZ_cff)` in python config files, into hyperlinks when viewing CMSSW files on Github.com, so you can get to the includes easily. (I don't know why this hasn't been done already.)
+This Chrome extension turns `#include X` in C/C++ files, and `import X`/`from X import Y`/`process.load(XXX.YYY.ZZZ_cff)` in python config files, into hyperlinks when viewing CMSSW files on Github.com, so you can get to the includes easily. It works on the central repo AND your forks. (I don't know why this hasn't been done already.)
+
+C++ bonus: it even adds links to the related src files (if they exist).
 
 ## Instructions
 
@@ -31,5 +33,13 @@ Maybe I'll do a Firefox equivalent some day. If I ever get this one done.
 7) You can now edit make edits. Everything is done in [contentscript.js](contentscript.js). The [manifest.json](manifest.json) file declares the extension to Chrome, with options about name, version number, page permissions, etc.
 
 8) Once you've made your edits, hit the Reload button below the extension (or ctrl/cmd+R on the chrome://extensions page) and reload your cmssw page to see your work in action!
+
+## TODO/Ideas
+
+- use github API?
+- options page to add loacation of headers for non-CMSSW repos?
+- or auto lookup - e.g. if #include "myEvent.h" link to same folder/myEvent.h, or #include "../myObj.h" link to ../myObj.h ?
+- options page? (keyboard shortcut, etc)
+- allow you to custom define where header files are?
 
 Robin Aggleton 2014
