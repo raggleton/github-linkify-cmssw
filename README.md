@@ -41,5 +41,6 @@ Maybe I'll do a Firefox equivalent some day. If I ever get this one done.
 - or auto lookup - e.g. if #include "myEvent.h" link to same folder/myEvent.h, or #include "../myObj.h" link to ../myObj.h ?
 - options page? (keyboard shortcut, etc)
 - allow you to custom define where header files are?
+- if on a header page, add link to src file!
 
 Robin Aggleton 2014

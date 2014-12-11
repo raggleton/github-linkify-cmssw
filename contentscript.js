@@ -66,12 +66,19 @@ function test_py_import(line) {
 
 
 // test if URL exists
-// slow??
-function UrlExists(url) {
+// make sure it's asynchronous otherwise hangs!
+function check_URL_add_link(url, cell) {
     var http = new XMLHttpRequest();
-    http.open('HEAD', url, false);
+    http.open('HEAD', url);
+    http.onreadystatechange = function() {
+        if (this.readyState == 4) {
+            if (this.status != 404) {
+                var srcText = "&nbsp&nbsp&nbsp<a href=\""+url+"\" style=\"text-decoration:underline;\">[goto src]</a>";
+                cell.innerHTML = cell.innerHTML.concat(srcText);
+            }
+        }
+    };
     http.send();
-    return http.status != 404;
 }
 
 
@@ -117,18 +124,20 @@ for (var i = 0; i < rows.length; ++i) {
                 // we add in a tag to go to the src file instead
                 // THIS ASSUMES THE FILE IS IN /src/ DIRECTORY
                 // but what if it is in /plugins???
-                // brutal way atm to tell if it's .cpp or .cc. Need github API here!
                 var srcPath = link.replace("interface", "src");
                 var cppSrc = srcPath.replace(".h", ".cpp");
                 var ccSrc = srcPath.replace(".h", ".cc");
-                if (UrlExists(cppSrc))
-                    srcPath = cppSrc;
-                else if (UrlExists(ccSrc))
-                    srcPath = ccSrc;
-                if (srcPath != link.replace("interface", "src")) {
-                    var srcText = "&nbsp&nbsp&nbsp<a href=\""+srcPath+"\" style=\"text-decoration:underline;\">[goto src]</a>";
-                    cell.innerHTML = cell.innerHTML.concat(srcText);
-                }
+                check_URL_add_link(cppSrc, cell);
+                check_URL_add_link(ccSrc, cell);
+                // console.log(a);
+                // if (check_URL_add_link(cppSrc))
+                //     srcPath = cppSrc;
+                // else if (check_URL_add_link(ccSrc))
+                //     srcPath = ccSrc;
+                // if (srcPath != link.replace("interface", "src")) {
+                //     var srcText = "&nbsp&nbsp&nbsp<a href=\""+srcPath+"\" style=\"text-decoration:underline;\">[goto src]</a>";
+                //     cell.innerHTML = cell.innerHTML.concat(srcText);
+                // }
             }
 
             // tests for python imports/fragments
