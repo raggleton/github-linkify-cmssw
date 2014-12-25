@@ -94,6 +94,9 @@ for (var i = 0; i < rows.length; ++i) {
         if (file_line_pattern.test(cell.className)) {
             var line = cell.textContent;
 
+            /////////////
+            // C++ BIT //
+            /////////////
             // check line has a C++ #include, if so pull the header path
             // ensure it has a ".h", and a "/", to exclude STL
             if (test_cpp_include(line)) {
@@ -127,19 +130,14 @@ for (var i = 0; i < rows.length; ++i) {
                 var srcPath = link.replace("interface", "src");
                 var cppSrc = srcPath.replace(".h", ".cpp");
                 var ccSrc = srcPath.replace(".h", ".cc");
-                check_URL_add_link(cppSrc, cell);
+                // try .cc first, if not try cpp
                 check_URL_add_link(ccSrc, cell);
-                // console.log(a);
-                // if (check_URL_add_link(cppSrc))
-                //     srcPath = cppSrc;
-                // else if (check_URL_add_link(ccSrc))
-                //     srcPath = ccSrc;
-                // if (srcPath != link.replace("interface", "src")) {
-                //     var srcText = "&nbsp&nbsp&nbsp<a href=\""+srcPath+"\" style=\"text-decoration:underline;\">[goto src]</a>";
-                //     cell.innerHTML = cell.innerHTML.concat(srcText);
-                // }
+                check_URL_add_link(cppSrc, cell);
             }
 
+            ////////////////
+            // PYTHON BIT //
+            ////////////////
             // tests for python imports/fragments
             var config = test_py_import(line);
             // if we have a valid python config, turn it into a path

@@ -8,9 +8,9 @@
             "https://www.github.com/*/cmssw/*",
             "https://github.com/*/cmssw/*"
             ],
-        "js": ["contentscript.js"]
+        "js": ["contentscript.js"],
         // "js": ["contentscript.js", "jquery-2.1.1.min.js"]
-        // "run_at": "document_end"         // pay attention to this line
+        "run_at": "document_end"         // pay attention to this line
         }
     ],
     "manifest_version": 2
