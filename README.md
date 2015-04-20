@@ -10,6 +10,8 @@ C++ bonus: it even adds links to the related src files (if they exist).
 
 https://github.com/raggleton/github-linkify-cmssw/releases/latest
 
+You will have to hit "Continue" in your downloads bar. Note that it may say "Extensions cannot be installed from this website". That's fine.
+
 2) Go to [chrome://extensions](chrome://extensions)
 
 3) Drag and drop the `github-linkify-cmssw.crx` package onto the window. Click OK when it asks permission to access github.com. This should install it.
@@ -36,11 +38,9 @@ Maybe I'll do a Firefox equivalent some day. If I ever get this one done.
 
 ## TODO/Ideas
 
-- use github API?
-- options page to add loacation of headers for non-CMSSW repos?
-- or auto lookup - e.g. if #include "myEvent.h" link to same folder/myEvent.h, or #include "../myObj.h" link to ../myObj.h ?
-- options page? (keyboard shortcut, etc)
-- allow you to custom define where header files are?
 - if on a header page, add link to src file!
+- detect if file is PY or CPP from file extension in URL (easy), then customise looping e.g. for C++ stop once you've hit a non-comment line that doens't have include in it
+- testing URL: STOP once you've found a succcessful one
+- bug: only works on reload?
 
 Robin Aggleton 2014
