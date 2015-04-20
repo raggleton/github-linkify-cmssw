@@ -4,6 +4,14 @@ This Chrome extension turns `#include X` in C/C++ files, and `import X`/`from X 
 
 C++ bonus: it even adds links to the related src files (if they exist).
 
+## Demo
+
+### C++ file:
+![Demo of c++ features](cpp.gif?raw=true)
+
+### Python config
+![Demo of python features](py.gif?raw=true)
+
 ## Instructions
 
 1) Download the latest release:
