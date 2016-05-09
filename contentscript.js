@@ -44,6 +44,8 @@ function test_py_import(line) {
     var py_pattern3 = /import/;
     var py_pattern4 = /process.load(.*)/;
 
+    line = line.trim();
+
     var config;
     if (py_pattern1.test(line)) {
         config = line.replace(/from\s/,"");

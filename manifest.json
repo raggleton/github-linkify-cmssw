@@ -1,7 +1,7 @@
 {
     "name": "Github linkify for CMSSW",
     "description": "Makes browsing CMSSW files waaaay easier.",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "content_scripts": [
         {
         "matches": [
@@ -9,7 +9,6 @@
             "https://github.com/*/cmssw/*"
             ],
         "js": ["contentscript.js"],
-        // "js": ["contentscript.js", "jquery-2.1.1.min.js"]
         "run_at": "document_end"         // pay attention to this line
         }
     ],
