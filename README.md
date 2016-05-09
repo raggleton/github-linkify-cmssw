@@ -44,6 +44,37 @@ Maybe I'll do a Firefox equivalent some day. If I ever get this one done.
 
 8) Once you've made your edits, hit the Reload button below the extension (or ctrl/cmd+R on the chrome://extensions page) and reload your cmssw page to see your work in action!
 
+### Package extension into CRX file
+
+This is required whenever a new release is made
+
+1) Go to chrome://extensions
+
+2) Click "Pack extension..."
+
+3) Select your ``github-linkify-cmssw`` directory
+
+4) Select private key. This will be generated the first time you package an extension. See https://developer.chrome.com/extensions/packaging
+
+5) This will output a CRX file
+
+### Making a new release
+
+1) First make a tag:
+
+```
+git tag -a <tagname> -m <brief description> <commit hash>
+git push origin --tags
+```
+
+2) Then navigate to https://github.com/raggleton/github-linkify-cmssw/releases, click "Draft a new release"
+
+3) Choose your new tag, enter title and description
+
+4) Attach the new CRX file
+
+5) Hit "Publish release"
+
 ## TODO/Ideas
 
 - if on a header page, add link to src file!
