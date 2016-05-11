@@ -1,6 +1,6 @@
 {
     "name": "Github linkify for CMSSW",
-    "description": "Makes browsing CMSSW files waaaay easier.",
+    "description": "Turn C++ and Python includes in CMSSW into links on Github",
     "version": "0.3.2",
     "content_scripts": [
         {
@@ -9,8 +9,11 @@
             "https://github.com/*/cmssw/*"
             ],
         "js": ["contentscript.js"],
-        "run_at": "document_end"         // pay attention to this line
+        "run_at": "document_end"
         }
     ],
-    "manifest_version": 2
+    "manifest_version": 2,
+    "icons": {
+      "128": "images/icon/icon_128.png"
+    }
 }
