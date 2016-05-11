@@ -12,7 +12,11 @@ C++ bonus: it even adds links to the related src files (if they exist).
 ### Python config
 ![Demo of python features](py.gif?raw=true)
 
-## Instructions
+## Install
+
+Get it here: [Chrome web store](https://chrome.google.com/webstore/detail/github-linkify-for-cmssw/dfhloocknejlnadfgmkceikaaidgmndk)
+
+**OLD:** (but maybe useful?)
 
 1) Download the latest release:
 
@@ -26,7 +30,7 @@ You will have to hit "Continue" in your downloads bar. Note that it may say "Ext
 
 Maybe I'll do a Firefox equivalent some day. If I ever get this one done.
 
-## Instructions for developers
+## Install for developers
 
 1) Clone this repo.
 
