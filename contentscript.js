@@ -37,6 +37,7 @@ function test_cpp_include(line) {
 
 
 // test line to see if valid python import/process.load/etc
+// returns sanitized python part of line (e.g. RecoJets.config.blah)
 function test_py_import(line) {
     // patterns to do python matching
     var py_pattern1 = /from\s.*\simport\s.*/;
@@ -141,13 +142,23 @@ for (var i = 0; i < rows.length; ++i) {
             // PYTHON BIT //
             ////////////////
             // tests for python imports/fragments
-            var config = test_py_import(line);
+            var pyImportPart = test_py_import(line);
             // if we have a valid python config, turn it into a path
-            if (config != "") {
-                config = config.replace(/['"]/g, "");
-                var path = config.replace(/\./g, "/");
+            if (pyImportPart != "") {
+                pyImportPart = pyImportPart.replace(/['"]/g, ""); // remove quotations
+                var path = pyImportPart.replace(/\./g, "/"); // replace . with /
                 var parts = path.split("/");
-                path = path.replace(parts[parts.length-1],"python/"+parts[parts.length-1]+".py")
+                // Now insert the missing 'python' directory
+                // Need to handle possible directories inside of python dir
+                // In CMSSW python is assumed to be AAA/BBB/python,
+                // so that AAA/BBB/python/CCC is OK
+                // but AAA/BBB/CCC/python is not OK
+                // path = path.replace(parts[2],"python/"+parts[2]+".py")
+                parts.splice(2, 0, "python");
+                // Add in the .py ending
+                parts.splice(-1, 1, parts.slice(-1)[0] + ".py");
+                // Turn back into string
+                path = parts.join("/");
                 var link = rootURL.concat(path)
 
                 // get color of original text by getting class name of <span> or <td> tag that houses it,
@@ -155,7 +166,7 @@ for (var i = 0; i < rows.length; ++i) {
                 // should probably put this as a function since we do the same for py and c++
                 var header_class = "";
                 for (var k = 0; k < cell.childNodes.length; k++) {
-                    if (cell.childNodes[k].textContent.indexOf(config) != -1) {
+                    if (cell.childNodes[k].textContent.indexOf(pyImportPart) != -1) {
                         header_class = cell.childNodes[k].className;
                     }
                 }
@@ -166,8 +177,8 @@ for (var i = 0; i < rows.length; ++i) {
 
                 // let's replace the text with a link
                 // keep same colour as before, but underline it to make it noticeable for user
-                var newText = "<a href=\""+link+"\" style=\"text-decoration:underline;color:"+color+"\">"+config+"</a>";
-                cell.innerHTML = cell.innerHTML.replace(config, newText);
+                var newText = "<a href=\""+link+"\" style=\"text-decoration:underline;color:"+color+"\">"+pyImportPart+"</a>";
+                cell.innerHTML = cell.innerHTML.replace(pyImportPart, newText);
             }
         }
     }
